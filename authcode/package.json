@@ -1,0 +1,20 @@
+{
+  "name": "authcode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/router": "^9.0.0",
+    "koa": "^2.11.0",
+    "koa-static": "^5.0.0",
+    "koa2-connect-history-api-fallback": "^0.1.2",
+    "koa2-history-api-fallback": "^0.1.0",
+    "node-fetch": "^2.6.0",
+    "qs": "^6.9.3"
+  }
+}

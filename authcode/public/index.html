@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .show {
+      display: block;
+    }
+    .hide {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <button class="github-login">Login With Github</button>
+    <div id="login-user"></div>
+  </div>
+  <script>
+    // TODO state存localstorage 比较
+    const state = Math.random().toString(36).substr(2);
+    sessionStorage.setItem('@@state', state);
+    const githubLogin = document.querySelector('.github-login');
+    const params = {
+      client_id: '5f7b9345500882f40c0e',
+      redirect_uri: encodeURIComponent('http://localhost:9000/auth/redirect?redirect_uri=/sso/control'),
+      login: 'dudu',
+      // scope: 'user',
+      state,
+    }
+
+    let url = 'http://localhost:9000/auth/code?';
+
+    url = url + stringify(params)
+
+    githubLogin.addEventListener('click', function (e) {
+      fetch(url).then(res => res.json())
+        .then(res => {
+          location.href = res.uri;
+        })
+    })
+
+    const loginUserEl = document.getElementById('login-user');
+
+    if (location.pathname === '/sso/control') {
+      const hashObj = new URLSearchParams(location.hash.substr(1));
+      const accessToken = hashObj.get('access_token');
+      const tokenType = hashObj.get('token_type');
+      fetch('http://localhost:9000/auth/user', {
+        method: 'GET',
+        headers: {
+          Authorization: `token ${accessToken}`,
+          'Content-Type': 'application/json',
+        }
+      }).then(res => res.json())
+      .then(res => {
+        loginUserEl.innerHTML = res.login;
+      })
+    }
+
+    function stringify(params) {
+      return Object.keys(params).reduce((res, key) => {
+        if (res) {
+          res += '&';
+        }
+        res += key + '=' + params[key];
+        return res;
+      }, '')
+    }
+  </script>
+</body>
+</html>
